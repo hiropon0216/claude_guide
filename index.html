@@ -19,10 +19,11 @@
       </div>
 
       <label class="search-label" for="guideSearch">章検索</label>
-      <input id="guideSearch" class="search-input" type="search" placeholder="CLI、Hooks、権限など">
+      <input id="guideSearch" class="search-input" type="search" placeholder="CLI、モデル、Hooks、権限など">
 
       <nav class="toc" aria-label="目次">
         <a href="#overview">全体像</a>
+        <a href="#audit">監査結果</a>
         <a href="#basics">基本操作</a>
         <a href="#prompting">プロンプト設計</a>
         <a href="#code-intro">Claude Code入門</a>
@@ -47,8 +48,8 @@
           <p class="eyebrow">For engineers moving to Claude</p>
           <h2>Claudeを「触れる」から「現場で安全に成果を出す」へ。</h2>
           <p>
-            この教材は、Claudeの基礎、プロンプト設計、Claude Code CLI、Gitとテストを含む実務ワークフロー、
-            チーム導入時の権限管理までを一気通貫で学ぶための社内向けハンドブックです。
+            この教材は、Claudeの基礎、モデル選択、プロンプト設計、Claude Code CLI、Gitとテストを含む実務ワークフロー、
+            権限管理、文脈管理、拡張機能、チーム導入ルールまでを一気通貫で学ぶための社内向けハンドブックです。
           </p>
           <div class="lead-actions">
             <a class="button primary" href="#cli">CLIから読む</a>
@@ -82,20 +83,54 @@
 
       <section class="status-strip" aria-label="教材の到達目標">
         <div>
-          <strong>11章</strong>
-          <span>基礎から応用まで</span>
+          <strong>12領域</strong>
+          <span>基礎、CLI、運用まで</span>
         </div>
         <div>
           <strong>CLI重視</strong>
-          <span>現場開発の中核</span>
+          <span>コマンドと運用を具体化</span>
         </div>
         <div>
           <strong>公式情報</strong>
-          <span>更新前提で参照</span>
+          <span>2026-06-13確認</span>
         </div>
         <div>
           <strong>演習付き</strong>
-          <span>手順として再現</span>
+          <span>判断基準まで含める</span>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="audit" data-search="監査 review 網羅性 抽象 不足 十分 厳しいレビュー">
+        <div class="section-heading">
+          <p class="chapter">Strict Review</p>
+          <h2>この教材だけで十分か</h2>
+          <p>初版を厳しめに見ると、方向性は正しい一方で「使いこなす」と言えるには、CLI、権限、文脈管理、検証、拡張機能の具体性が不足していました。</p>
+        </div>
+
+        <div class="audit-grid">
+          <article class="plain-panel">
+            <h3>結論</h3>
+            <p>この更新版では、現場エンジニアがClaude Codeを日常開発に投入するための基礎知識はかなり揃っています。ただし、API実装、料金試算、社内ポリシー、個別MCPサーバー設定は別教材で深掘りする前提です。</p>
+          </article>
+          <article class="plain-panel">
+            <h3>初版の弱点</h3>
+            <ul class="dense-list">
+              <li>CLIコマンドが代表例だけで、背景セッションや管理系が薄い。</li>
+              <li>slash commandの利用タイミングが見えにくい。</li>
+              <li>権限モード、allow/ask/deny、設定スコープの説明が粗い。</li>
+              <li>「実務ワークフロー」が抽象的で、依頼文と完了条件が不足している。</li>
+              <li>最新モデルやプロンプト設計の前提を公式情報に寄せきれていない。</li>
+            </ul>
+          </article>
+          <article class="plain-panel">
+            <h3>補強した判断基準</h3>
+            <ul class="dense-list">
+              <li>小さい修正は直接実装、大きい変更はplan modeで調査と計画を分離する。</li>
+              <li>作業依頼には必ず検証コマンド、期待結果、触ってよい範囲を書く。</li>
+              <li>チーム標準はProject設定、個人差分はLocal設定、強制ルールはManaged設定に置く。</li>
+              <li>危険な権限はプロンプトでお願いせず、permission rulesやHooksで止める。</li>
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -125,9 +160,43 @@
           </article>
         </div>
 
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>領域</th>
+                <th>2026-06-13時点の押さえ方</th>
+                <th>現場での使い分け</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Claude Fable 5</td>
+                <td>最も高い能力が必要な推論、長期タスク、高自律エージェント向けとして扱う。</td>
+                <td>難しい設計判断、長時間の調査、複数段階のエージェント作業。</td>
+              </tr>
+              <tr>
+                <td>Claude Opus 4.8</td>
+                <td>複雑な推論、agentic coding、高自律作業の有力候補。</td>
+                <td>設計、移行、重要PRレビュー、難しい障害調査。</td>
+              </tr>
+              <tr>
+                <td>Claude Sonnet 4.6</td>
+                <td>速度と知能のバランスを取りたい標準作業向け。</td>
+                <td>日常の実装、テスト追加、ドキュメント更新、差分レビュー。</td>
+              </tr>
+              <tr>
+                <td>Claude Haiku 4.5</td>
+                <td>高速応答が重要な軽量作業向け。</td>
+                <td>短い要約、分類、簡単な変換、軽量な補助タスク。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <div class="callout">
           <strong>現場での見方</strong>
-          <p>Claude Codeを導入する場合でも、Claude全般の限界、事実確認、プロンプト設計を理解しておくと、指示の精度とレビュー品質が上がります。</p>
+          <p>Claude Codeを導入する場合でも、Claude全般の限界、事実確認、モデル選択、プロンプト設計を理解しておくと、指示の精度とレビュー品質が上がります。モデル名、料金、提供状況は更新が速いため、教材更新時に必ず公式ページで再確認します。</p>
         </div>
       </section>
 
@@ -165,6 +234,35 @@
             <p>文章、設計、コード、テスト観点の抜けを見つける。</p>
           </article>
         </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>曖昧な依頼</th>
+                <th>現場で使える依頼</th>
+                <th>なぜ良いか</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>このコード直して</td>
+                <td>ログイン失敗の原因を <code>src/auth</code> から調査し、再現テストを1つ追加してから最小差分で修正して。</td>
+                <td>範囲、期待成果、検証方法がある。</td>
+              </tr>
+              <tr>
+                <td>良い感じにレビューして</td>
+                <td>この差分を correctness bug、security risk、missing test の3観点で重大度順にレビューして。スタイル指摘は最後に分けて。</td>
+                <td>レビュー観点と優先順位が明確。</td>
+              </tr>
+              <tr>
+                <td>ドキュメント作って</td>
+                <td>新規参加者が30分で起動できるREADMEを作って。必要コマンド、環境変数、よくある失敗、検証方法を含めて。</td>
+                <td>読者、利用場面、必須項目がある。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section class="section-card searchable" id="prompting" data-search="プロンプト prompt engineering XML タグ few shot examples チェックリスト">
@@ -199,6 +297,21 @@
 重大な不足、改善案、次に作るべき演習の順で出力。
 &lt;/output&gt;</code></pre>
         </div>
+
+        <div class="grid three">
+          <article class="plain-panel">
+            <h3>評価から始める</h3>
+            <p>Anthropicの公式ガイドは、成功条件と評価方法を先に置くことを重視しています。プロンプト改善は、何を合格とするかが決まってから行います。</p>
+          </article>
+          <article class="plain-panel">
+            <h3>例を使う</h3>
+            <p>Few-shot / multishotでは、実際の業務に近い例、例外パターン、望ましい出力を渡します。形式を安定させたい時ほど効果があります。</p>
+          </article>
+          <article class="plain-panel">
+            <h3>長文は構造化する</h3>
+            <p>長い入力は上部に置き、最後に質問や作業指示を置きます。文書、制約、出力形式はXML風タグで分けると誤読が減ります。</p>
+          </article>
+        </div>
       </section>
 
       <section class="section-card searchable" id="code-intro" data-search="Claude Code 入門 Agentic coding tool ファイル編集 コマンド実行">
@@ -230,6 +343,11 @@
             <p>テスト、lint、ブラウザ確認、Git差分確認を行う。</p>
           </div>
         </div>
+
+        <div class="callout">
+          <strong>Claude Codeの強さ</strong>
+          <p>公式ドキュメントでは、Claude Codeはターミナル、IDE、Desktop、Webで利用でき、コードベースを読み、複数ファイルを編集し、コマンド実行やGit操作まで行う開発支援ツールとして説明されています。単発のチャットではなく、開発環境に入るAIとして扱います。</p>
+        </div>
       </section>
 
       <section class="section-card searchable highlight-section" id="cli" data-search="CLI claude command flags interactive mode slash commands PowerShell WSL worktree tools system prompt">
@@ -246,16 +364,19 @@
 claude "このプロジェクトの構造を説明して"
 claude -p "このエラーログを要約して"
 claude -c
-claude doctor</code></pre>
+claude --resume
+claude doctor
+claude --safe-mode</code></pre>
             <button class="copy-button" data-copy>コピー</button>
           </div>
           <div>
             <h3>使い分け</h3>
             <ul class="dense-list">
-              <li><strong>対話</strong>: `claude` で長めの作業を進める。</li>
-              <li><strong>初期指示付き</strong>: `claude "..."` で目的を渡して開始。</li>
-              <li><strong>非対話</strong>: `claude -p` でログ要約や差分レビュー。</li>
-              <li><strong>継続</strong>: `claude -c` で直近セッションを再開。</li>
+              <li><strong>対話</strong>: <code>claude</code> で長めの作業を進める。</li>
+              <li><strong>初期指示付き</strong>: <code>claude "..."</code> で目的を渡して開始。</li>
+              <li><strong>非対話</strong>: <code>claude -p</code> でログ要約、差分レビュー、CI補助に使う。</li>
+              <li><strong>継続</strong>: <code>claude -c</code> または <code>--resume</code> で過去作業に戻る。</li>
+              <li><strong>切り分け</strong>: <code>--safe-mode</code> でCLAUDE.md、Hooks、MCP、Skillsなどの影響を外す。</li>
             </ul>
           </div>
         </div>
@@ -276,29 +397,44 @@ claude doctor</code></pre>
                 <td>対話セッションを開始する。</td>
               </tr>
               <tr>
+                <td>初期指示</td>
+                <td><code>claude "task"</code></td>
+                <td>目的を渡した状態で対話セッションを開始する。</td>
+              </tr>
+              <tr>
                 <td>ワンショット</td>
                 <td><code>claude -p "..."</code></td>
-                <td>スクリプトやパイプ処理で使う。</td>
+                <td>対話に入らず、標準出力へ結果を返す。スクリプト、CI、ログ要約向け。</td>
+              </tr>
+              <tr>
+                <td>入出力</td>
+                <td><code>--output-format json</code>, <code>stream-json</code></td>
+                <td><code>-p</code> と組み合わせ、機械処理しやすい形式で出力する。</td>
               </tr>
               <tr>
                 <td>継続</td>
-                <td><code>claude -c</code></td>
+                <td><code>claude -c</code>, <code>--continue</code></td>
                 <td>現在ディレクトリの直近会話を続ける。</td>
               </tr>
               <tr>
                 <td>再開</td>
-                <td><code>claude -r</code></td>
-                <td>過去セッションを選んで再開する。</td>
+                <td><code>claude --resume</code>, <code>-r</code></td>
+                <td>セッションIDや名前、またはピッカーから過去セッションを再開する。</td>
+              </tr>
+              <tr>
+                <td>命名</td>
+                <td><code>--name</code>, <code>-n</code></td>
+                <td>再開しやすいようにセッション名を付ける。</td>
               </tr>
               <tr>
                 <td>診断</td>
-                <td><code>claude doctor</code></td>
-                <td>CLIや設定の問題を切り分ける。</td>
+                <td><code>claude doctor</code>, <code>/doctor</code></td>
+                <td>CLI、設定、接続、環境の問題を切り分ける。</td>
               </tr>
               <tr>
                 <td>対話内</td>
-                <td><code>/help</code>, <code>/clear</code>, <code>/compact</code>, <code>/doctor</code></td>
-                <td>セッション操作、文脈整理、診断を行う。</td>
+                <td><code>/help</code>, <code>/clear</code>, <code>/compact</code>, <code>/context</code></td>
+                <td>ヘルプ、会話リセット、文脈圧縮、コンテキスト使用状況確認。</td>
               </tr>
               <tr>
                 <td>シェル</td>
@@ -306,9 +442,121 @@ claude doctor</code></pre>
                 <td>対話中にコマンドを実行して結果を共有する。</td>
               </tr>
               <tr>
+                <td>背景実行</td>
+                <td><code>Ctrl+B</code>, <code>--bg</code>, <code>claude agents</code></td>
+                <td>長時間コマンドやエージェント作業を背景で走らせ、一覧・接続・停止を行う。</td>
+              </tr>
+              <tr>
                 <td>権限</td>
                 <td><code>--tools</code>, <code>--permission-mode</code></td>
                 <td>利用できる操作や承認モードを制御する。</td>
+              </tr>
+              <tr>
+                <td>作業分離</td>
+                <td><code>--worktree</code>, <code>-w</code></td>
+                <td>リポジトリ内の分離されたgit worktreeで作業する。</td>
+              </tr>
+              <tr>
+                <td>MCP</td>
+                <td><code>--mcp-config</code>, <code>--strict-mcp-config</code></td>
+                <td>MCPサーバーを指定し、必要なら他のMCP設定を無視する。</td>
+              </tr>
+              <tr>
+                <td>システム指示</td>
+                <td><code>--append-system-prompt</code>, <code>--system-prompt</code></td>
+                <td>通常はappendで追加する。置換はデフォルトのツール指針や安全指示も消えるため慎重に使う。</td>
+              </tr>
+              <tr>
+                <td>トラブル切り分け</td>
+                <td><code>--safe-mode</code></td>
+                <td>カスタマイズを無効化して、設定や拡張が不具合原因か確認する。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid three">
+          <article class="plain-panel">
+            <h3>インストール</h3>
+            <pre><code># Windows PowerShell
+irm https://claude.ai/install.ps1 | iex
+
+# macOS / Linux / WSL
+curl -fsSL https://claude.ai/install.sh | bash
+
+# WinGet
+winget install Anthropic.ClaudeCode</code></pre>
+          </article>
+          <article class="plain-panel">
+            <h3>非対話での実務例</h3>
+            <pre><code>git diff | claude -p "correctness bugを重大度順にレビューして"
+cat test.log | claude -p "失敗原因と次の確認手順を要約して"
+claude -p --output-format json "READMEの改善点をJSONで"</code></pre>
+          </article>
+          <article class="plain-panel">
+            <h3>安全寄りの起動例</h3>
+            <pre><code>claude --permission-mode plan
+claude --tools "Read,Bash"
+claude --tools ""
+claude --strict-mcp-config
+claude --safe-mode</code></pre>
+          </article>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>slash command</th>
+                <th>使うタイミング</th>
+                <th>現場での意味</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>/init</code>, <code>/memory</code></td>
+                <td>初回セットアップ、ルール整備</td>
+                <td><code>CLAUDE.md</code> を作り、プロジェクト文脈を育てる。</td>
+              </tr>
+              <tr>
+                <td><code>/permissions</code></td>
+                <td>承認が多い、危険操作を制限したい</td>
+                <td>allow / ask / deny ルールを管理する。</td>
+              </tr>
+              <tr>
+                <td><code>/plan</code></td>
+                <td>複数ファイル変更、未知の設計、影響範囲が大きい</td>
+                <td>編集前に調査と計画へ寄せ、誤実装を減らす。</td>
+              </tr>
+              <tr>
+                <td><code>/diff</code>, <code>/code-review</code>, <code>/review</code>, <code>/security-review</code></td>
+                <td>commit前、PR前、重要変更後</td>
+                <td>差分確認、バグレビュー、PRレビュー、セキュリティ観点の確認。</td>
+              </tr>
+              <tr>
+                <td><code>/context</code>, <code>/compact</code>, <code>/clear</code></td>
+                <td>会話が長い、話題を切り替える</td>
+                <td>文脈の可視化、圧縮、新規タスクへの切り替え。</td>
+              </tr>
+              <tr>
+                <td><code>/agents</code>, <code>/fork</code>, <code>/batch</code>, <code>/tasks</code>, <code>/background</code></td>
+                <td>調査や大規模変更を並列化したい</td>
+                <td>subagent、背景作業、worktree分割を使う。利用可否はプランや環境に依存する。</td>
+              </tr>
+              <tr>
+                <td><code>/resume</code>, <code>/branch</code>, <code>/rewind</code></td>
+                <td>過去作業に戻る、別案を試す、戻したい</td>
+                <td>セッション継続、会話分岐、チェックポイントへの巻き戻し。</td>
+              </tr>
+              <tr>
+                <td><code>/doctor</code>, <code>/debug</code></td>
+                <td>CLI、設定、MCP、Hooksが怪しい</td>
+                <td>不具合の診断とログ付き調査。</td>
+              </tr>
+              <tr>
+                <td><code>/schedule</code>, <code>/loop</code>, <code>/teleport</code>, <code>/remote-control</code></td>
+                <td>定期実行、監視、別端末やWebとの連携</td>
+                <td>クラウド/ローカルをまたぐ継続作業。利用条件は環境と契約で変わる。</td>
               </tr>
             </tbody>
           </table>
@@ -316,7 +564,7 @@ claude doctor</code></pre>
 
         <div class="callout warning">
           <strong>Windowsでの注意</strong>
-          <p>PowerShell、Git Bash、WSLでパス表記やショートカットが変わります。チーム教材では、社内標準のターミナルを決めた上で手順を統一してください。</p>
+          <p>PowerShell、CMD、Git Bash、WSLでインストールコマンド、パス表記、シェルツールが変わります。公式Quickstartでは、Windows PowerShellには <code>irm ... | iex</code>、CMDには <code>install.cmd</code>、ネイティブWindowsではGit for Windows推奨という注意が示されています。チーム教材では、社内標準のターミナルを決めて手順を統一してください。</p>
         </div>
       </section>
 
@@ -349,6 +597,50 @@ claude doctor</code></pre>
             <code>commit前に差分をレビューして、リスクとテスト結果をまとめて</code>
           </article>
         </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>タスク</th>
+                <th>推奨する進め方</th>
+                <th>完了条件</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>新しいコードベース理解</td>
+                <td>広く概要を聞き、次に認証、データモデル、テスト、ビルドなどに絞る。</td>
+                <td>主要ディレクトリ、実行コマンド、ドメイン用語、変更時の注意点を説明できる。</td>
+              </tr>
+              <tr>
+                <td>バグ修正</td>
+                <td>症状、再現手順、失敗ログ、期待結果を渡す。可能なら先に失敗テストを作る。</td>
+                <td>原因、修正差分、再発防止テスト、実行した検証コマンドが揃う。</td>
+              </tr>
+              <tr>
+                <td>リファクタ</td>
+                <td>挙動維持、変更範囲、既存パターン、後方互換性を明示する。</td>
+                <td>外部仕様が変わらず、テストが通り、差分の意図が説明できる。</td>
+              </tr>
+              <tr>
+                <td>テスト追加</td>
+                <td>未カバー箇所を探し、正常系、境界値、異常系を分けて追加する。</td>
+                <td>テスト名が仕様を表し、失敗時に原因が分かり、対象テストを実行済み。</td>
+              </tr>
+              <tr>
+                <td>PR作成</td>
+                <td><code>/diff</code> と <code>/code-review</code> で確認し、要約、テスト結果、リスクを本文に入れる。</td>
+                <td>意図したファイルだけが入り、レビュー観点と検証結果が明示されている。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <strong>計画モードの使いどころ</strong>
+          <p>公式のベストプラクティスは、未知の領域や複数ファイルにまたがる変更では、探索、計画、実装、commitを分けることを勧めています。一方で、タイポ修正や1行のログ追加など、差分を一文で説明できる作業は直接依頼して構いません。</p>
+        </div>
       </section>
 
       <section class="section-card searchable" id="context" data-search="CLAUDE.md memory settings .claude context project rules custom commands">
@@ -360,7 +652,7 @@ claude doctor</code></pre>
 
         <div class="template-block">
           <div>
-            <h3>`CLAUDE.md`の最小テンプレート</h3>
+            <h3><code>CLAUDE.md</code>の最小テンプレート</h3>
             <p>チームの開発ルール、検証コマンド、禁止事項を短く書きます。</p>
           </div>
           <pre><code># Project Guide
@@ -382,7 +674,46 @@ claude doctor</code></pre>
 
         <div class="callout">
           <strong>書きすぎない</strong>
-          <p>`CLAUDE.md` は巨大な仕様書ではなく、毎回守ってほしい前提の圧縮版として使います。古い情報が残ると逆に精度が落ちます。</p>
+          <p><code>CLAUDE.md</code> は巨大な仕様書ではなく、毎回守ってほしい前提の圧縮版として使います。古い情報が残ると逆に精度が落ちます。</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>置き場所</th>
+                <th>向いている内容</th>
+                <th>注意</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>./CLAUDE.md</code> または <code>./.claude/CLAUDE.md</code></td>
+                <td>チーム共有のビルド、テスト、設計ルール、PR作法。</td>
+                <td>Git管理されるため個人情報やローカル事情は書かない。</td>
+              </tr>
+              <tr>
+                <td><code>./CLAUDE.local.md</code></td>
+                <td>個人のサンドボックスURL、手元だけのメモ。</td>
+                <td><code>.gitignore</code> 対象にする。</td>
+              </tr>
+              <tr>
+                <td><code>~/.claude/CLAUDE.md</code></td>
+                <td>個人が全プロジェクトで使う作業好み。</td>
+                <td>プロジェクト固有ルールは置かない。</td>
+              </tr>
+              <tr>
+                <td>Managed policy</td>
+                <td>会社全体のセキュリティ、コンプライアンス、強制ルール。</td>
+                <td>IT/DevOps管理。ユーザー側で上書きできない前提にする。</td>
+              </tr>
+              <tr>
+                <td>Auto memory</td>
+                <td>Claudeが作業中に学んだビルドコマンド、デバッグ知見、好み。</td>
+                <td>文脈であって強制設定ではない。禁止はHooksやpermission rulesで行う。</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -396,28 +727,67 @@ claude doctor</code></pre>
         <div class="feature-list">
           <article>
             <h3>Skills</h3>
-            <p>特定作業の手順や知識を再利用可能な単位にする。</p>
+            <p>特定作業の手順や知識を再利用可能な単位にする。PRレビュー、リリースノート、社内API移行など、毎回同じ手順がある作業に向く。</p>
           </article>
           <article>
             <h3>Subagents</h3>
-            <p>レビュー、調査、テストなど役割ごとのエージェントに分ける。</p>
+            <p>レビュー、調査、テストなど役割ごとのエージェントに分ける。メイン会話の文脈を汚さず、専門タスクを並列に進めたい時に使う。</p>
           </article>
           <article>
             <h3>Hooks</h3>
-            <p>編集前後やツール実行時にチェックや通知を差し込む。</p>
+            <p>編集前後やツール実行時にチェックや通知を差し込む。format、lint、secret検出、危険コマンド抑止など、機械的に守らせたいルールに使う。</p>
           </article>
           <article>
             <h3>MCP</h3>
-            <p>外部ツールや社内データソースをClaude Codeから扱う。</p>
+            <p>外部ツールや社内データソースをClaude Codeから扱う。Jira、GitHub、Slack、Google Drive、社内DBなどをつなぐ時は権限範囲を先に決める。</p>
           </article>
           <article>
             <h3>GitHub Actions</h3>
-            <p>PRやCIの文脈でClaudeを使う。</p>
+            <p>PRやCIの文脈でClaudeを使う。CI失敗の要約、PRレビュー、issue triageなど、人間レビュー前の下処理に向く。</p>
           </article>
           <article>
             <h3>Agent SDK</h3>
-            <p>独自のエージェント体験や自動化を構築する。</p>
+            <p>独自のエージェント体験や自動化を構築する。CLIで足りない独自UI、権限制御、ワークフローを作る時の選択肢。</p>
           </article>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>やりたいこと</th>
+                <th>まず使うもの</th>
+                <th>まだ足りない時</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>毎回同じ指示を守らせたい</td>
+                <td><code>CLAUDE.md</code></td>
+                <td>内容が長いならSkillsへ分離。</td>
+              </tr>
+              <tr>
+                <td>危険操作を止めたい</td>
+                <td>permission rules</td>
+                <td>PreToolUse Hookで機械的に拒否。</td>
+              </tr>
+              <tr>
+                <td>レビューや調査を分担したい</td>
+                <td><code>/agents</code>, <code>/fork</code></td>
+                <td><code>/batch</code> やworktreeで分割。</td>
+              </tr>
+              <tr>
+                <td>社内システムを読ませたい</td>
+                <td>MCP</td>
+                <td>Managed settingsで全社配布。</td>
+              </tr>
+              <tr>
+                <td>CI上で実行したい</td>
+                <td><code>claude -p</code>, GitHub Actions</td>
+                <td>Agent SDKで専用フロー化。</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -449,10 +819,49 @@ claude doctor</code></pre>
           </article>
         </div>
 
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>制御対象</th>
+                <th>具体策</th>
+                <th>例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ツール利用</td>
+                <td><code>--tools</code> でBuilt-in toolを絞る。MCPは別途denyやstrict設定で制御する。</td>
+                <td><code>claude --tools "Read,Bash"</code></td>
+              </tr>
+              <tr>
+                <td>承認モード</td>
+                <td><code>--permission-mode</code> で開始時の承認方針を決める。</td>
+                <td><code>default</code>, <code>acceptEdits</code>, <code>plan</code>, <code>auto</code>, <code>dontAsk</code>, <code>bypassPermissions</code></td>
+              </tr>
+              <tr>
+                <td>allow / ask / deny</td>
+                <td>設定ファイルで、許可するコマンド、都度確認する操作、禁止する操作を分ける。</td>
+                <td><code>Bash(npm run *)</code> をallow、<code>Bash(git push *)</code> をdeny。</td>
+              </tr>
+              <tr>
+                <td>設定スコープ</td>
+                <td>Managed、User、Project、Localを使い分ける。</td>
+                <td>全社セキュリティはManaged、チーム標準はProject、個人差分はLocal。</td>
+              </tr>
+              <tr>
+                <td>強制チェック</td>
+                <td>プロンプトではなくHooksで止める。</td>
+                <td>secret検出、format、lint、危険な削除コマンドの拒否。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <div class="check-panel">
           <h3>導入前チェック</h3>
           <label><input type="checkbox" data-progress="sec-1"> 社内の機密情報ルールを確認した</label>
-          <label><input type="checkbox" data-progress="sec-2"> `CLAUDE.md` に禁止事項を書いた</label>
+          <label><input type="checkbox" data-progress="sec-2"> <code>CLAUDE.md</code> に禁止事項を書いた</label>
           <label><input type="checkbox" data-progress="sec-3"> 権限モードと承認ルールを説明できる</label>
           <label><input type="checkbox" data-progress="sec-4"> commit前レビューの担当を決めた</label>
         </div>
@@ -469,12 +878,12 @@ claude doctor</code></pre>
           <article>
             <span>01</span>
             <h3>コードベース説明</h3>
-            <p>任意のプロジェクトで `claude` を起動し、構造と主要ファイルを説明させる。</p>
+            <p>任意のプロジェクトで <code>claude</code> を起動し、構造、主要ファイル、実行コマンド、注意点を説明させる。</p>
           </article>
           <article>
             <span>02</span>
             <h3>ログ要約</h3>
-            <p>`claude -p` にエラーログを渡し、原因候補と次の確認手順を出す。</p>
+            <p><code>claude -p</code> にエラーログを渡し、原因候補、確認コマンド、担当者へ伝える要約を出す。</p>
           </article>
           <article>
             <span>03</span>
@@ -483,14 +892,43 @@ claude doctor</code></pre>
           </article>
           <article>
             <span>04</span>
-            <h3>`CLAUDE.md`作成</h3>
+            <h3><code>CLAUDE.md</code>作成</h3>
             <p>プロジェクト固有のルール、検証コマンド、禁止事項を書く。</p>
           </article>
           <article>
             <span>05</span>
             <h3>PRレビュー</h3>
-            <p>差分をClaude Codeにレビューさせ、重大度順にリスクを整理する。</p>
+            <p><code>/diff</code>、<code>/code-review</code>、<code>/security-review</code> を使い、重大度順にリスクを整理する。</p>
           </article>
+          <article>
+            <span>06</span>
+            <h3>権限ルール</h3>
+            <p><code>/permissions</code> で、テスト実行は許可、pushや削除は確認または禁止にする。</p>
+          </article>
+          <article>
+            <span>07</span>
+            <h3>計画モード</h3>
+            <p><code>/plan</code> で複数ファイル変更の設計だけ作らせ、人間が計画を編集してから実装へ進める。</p>
+          </article>
+          <article>
+            <span>08</span>
+            <h3>背景作業</h3>
+            <p>長いテストや調査を背景実行し、<code>/tasks</code> や <code>claude agents</code> で状態を確認する。</p>
+          </article>
+        </div>
+
+        <div class="template-block">
+          <div>
+            <h3>研修の最終課題</h3>
+            <p>受講者がこの課題を完了できれば、Claude Codeの現場投入に必要な基礎は一通り身についたと判断できます。</p>
+          </div>
+          <pre><code>1. 未知のリポジトリで claude を起動する。
+2. /init で CLAUDE.md を作り、検証コマンドを追記する。
+3. 小さな不具合を1つ選び、/plan で原因調査と修正計画を作る。
+4. 実装後、対象テストを実行する。
+5. /diff と /code-review で差分を確認する。
+6. commit前に、変更ファイル、検証結果、残リスクを説明する。</code></pre>
+          <button class="copy-button" data-copy>コピー</button>
         </div>
       </section>
 
@@ -505,9 +943,16 @@ claude doctor</code></pre>
           <a href="https://docs.anthropic.com/en/docs/intro-to-claude" target="_blank" rel="noopener">Claude概要</a>
           <a href="https://docs.anthropic.com/en/docs/about-claude/models" target="_blank" rel="noopener">モデル概要</a>
           <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">プロンプト設計</a>
+          <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Prompting best practices</a>
           <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code概要</a>
           <a href="https://docs.anthropic.com/en/docs/claude-code/quickstart" target="_blank" rel="noopener">Quickstart</a>
           <a href="https://docs.anthropic.com/en/docs/claude-code/cli-reference" target="_blank" rel="noopener">CLI reference</a>
+          <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands</a>
+          <a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode</a>
+          <a href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener">Common workflows</a>
+          <a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Claude Code best practices</a>
+          <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory / CLAUDE.md</a>
+          <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a>
           <a href="https://docs.anthropic.com/en/docs/claude-code/settings" target="_blank" rel="noopener">Settings</a>
           <a href="https://docs.anthropic.com/en/docs/claude-code/security" target="_blank" rel="noopener">Security</a>
           <a href="https://docs.anthropic.com/en/docs/claude-code/mcp" target="_blank" rel="noopener">MCP</a>

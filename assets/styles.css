@@ -506,7 +506,8 @@ th {
 .workflow-grid,
 .feature-list,
 .exercise-list,
-.links-grid {
+.links-grid,
+.audit-grid {
   display: grid;
   gap: 14px;
 }
@@ -517,6 +518,10 @@ th {
 
 .feature-list,
 .exercise-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.audit-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -605,6 +610,7 @@ input[type="checkbox"] {
   .feature-list,
   .exercise-list,
   .links-grid,
+  .audit-grid,
   .status-strip {
     grid-template-columns: 1fr;
   }

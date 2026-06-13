@@ -41,6 +41,8 @@
 | CLI 完全ガイド | https://docs.anthropic.com/en/docs/claude-code/commands | セッション内コマンド |
 | CLI 完全ガイド | https://docs.anthropic.com/en/docs/claude-code/environment-variables | 環境変数 |
 | CLI 完全ガイド | https://docs.anthropic.com/en/docs/claude-code/troubleshooting | `/doctor`、`claude doctor`、不具合対応 |
+| CLI 完全ガイド | https://code.claude.com/docs/en/commands | `/plan`、`/diff`、`/code-review`、`/agents`、`/background` などの現行コマンド |
+| CLI 完全ガイド | https://code.claude.com/docs/en/interactive-mode | `!` シェルモード、`Ctrl+B` 背景実行、履歴検索 |
 
 ## 設定、権限、文脈管理
 
@@ -50,6 +52,8 @@
 | プロジェクト文脈 | https://docs.anthropic.com/en/docs/claude-code/settings | settings、managed settings |
 | セキュリティ | https://docs.anthropic.com/en/docs/claude-code/permissions | permission mode |
 | セキュリティ | https://docs.anthropic.com/en/docs/claude-code/security | セキュリティと権限管理 |
+| セキュリティ | https://code.claude.com/docs/en/permissions | allow / ask / deny、Bashルール、MCP tool制御 |
+| セキュリティ | https://code.claude.com/docs/en/settings | Managed / User / Project / Local の設定スコープ |
 
 ## 応用機能
 
@@ -63,6 +67,18 @@
 | 応用機能 | https://docs.anthropic.com/en/docs/claude-code/plugins | Plugins |
 | 応用機能 | https://docs.anthropic.com/en/docs/claude-code/sdk | Agent SDK |
 | 応用機能 | https://docs.anthropic.com/en/docs/claude-code/github-actions | GitHub Actions |
+| 実務ワークフロー | https://code.claude.com/docs/en/common-workflows | コード理解、バグ修正、テスト、PR、並列作業のレシピ |
+| 実務ワークフロー | https://code.claude.com/docs/en/best-practices | 探索、計画、実装、検証の進め方 |
+
+## 2026-06-13 監査で追加確認したポイント
+
+- Claude Code は terminal、IDE、desktop、browser で利用できる agentic coding tool として公式に説明されている。
+- Native install は macOS / Linux / WSL、Windows PowerShell、Windows CMD で手順が異なる。
+- CLI reference では `--tools`、`--worktree`、`--safe-mode`、`--permission-mode`、`--mcp-config`、`--strict-mcp-config`、`--append-system-prompt`、`--output-format` などを確認した。
+- Commands reference では `/init`、`/memory`、`/permissions`、`/plan`、`/diff`、`/code-review`、`/review`、`/security-review`、`/agents`、`/fork`、`/batch`、`/tasks`、`/background`、`/doctor`、`/debug` などを確認した。
+- Settings reference では Managed、User、Project、Local のスコープと優先順位を確認した。
+- Memory reference では `CLAUDE.md` と auto memory の違い、共有すべき内容、書きすぎのリスクを確認した。
+- Prompting best practices では、成功条件、評価、明確な指示、例示、XMLタグ、長文入力の構造化を確認した。
 
 ## HTML 化前に再確認する項目
 

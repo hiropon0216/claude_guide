@@ -29,6 +29,7 @@
 - [公式情報ソースマップ](docs/02_official_source_map.md)
 - [CLI章の詳細設計](docs/03_cli_module_design.md)
 - [HTML化の制作計画](docs/04_html_production_plan.md)
+- [教材監査メモ](docs/05_content_review.md)
 
 ## 想定する完成形
 
@@ -39,6 +40,10 @@
 - 各章に到達目標とチェックリスト
 - CLI コマンドやプロンプト例にコピー操作
 - 演習と現場導入テンプレートを付録化
+
+初版HTML:
+
+- [Claude / Claude Code 実務導入ハンドブック](index.html)
 
 ## 更新方針
 
