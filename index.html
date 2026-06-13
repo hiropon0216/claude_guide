@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude / Claude Code 実務導入ハンドブック</title>
+  <meta name="description" content="Claude と Claude Code を現場導入するための、基礎からCLI、実務ワークフロー、セキュリティ、応用機能までを扱う静的HTML教材。">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="教材ナビゲーション">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <div>
+          <p class="brand-kicker">Claude Guide</p>
+          <h1>実務導入ハンドブック</h1>
+        </div>
+      </div>
+
+      <label class="search-label" for="guideSearch">章検索</label>
+      <input id="guideSearch" class="search-input" type="search" placeholder="CLI、Hooks、権限など">
+
+      <nav class="toc" aria-label="目次">
+        <a href="#overview">全体像</a>
+        <a href="#basics">基本操作</a>
+        <a href="#prompting">プロンプト設計</a>
+        <a href="#code-intro">Claude Code入門</a>
+        <a href="#cli">CLI完全ガイド</a>
+        <a href="#workflow">実務ワークフロー</a>
+        <a href="#context">文脈管理</a>
+        <a href="#advanced">応用機能</a>
+        <a href="#security">安全な導入</a>
+        <a href="#hands-on">ハンズオン</a>
+        <a href="#appendix">付録</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>最終更新: 2026-06-13</p>
+        <p>根拠: Anthropic公式ドキュメント</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="lead section-card searchable" id="top" data-search="Claude Claude Code 実務 導入 研修 教材">
+        <div class="lead-copy">
+          <p class="eyebrow">For engineers moving to Claude</p>
+          <h2>Claudeを「触れる」から「現場で安全に成果を出す」へ。</h2>
+          <p>
+            この教材は、Claudeの基礎、プロンプト設計、Claude Code CLI、Gitとテストを含む実務ワークフロー、
+            チーム導入時の権限管理までを一気通貫で学ぶための社内向けハンドブックです。
+          </p>
+          <div class="lead-actions">
+            <a class="button primary" href="#cli">CLIから読む</a>
+            <a class="button secondary" href="#hands-on">演習へ進む</a>
+          </div>
+        </div>
+
+        <div class="map-panel" aria-label="教材全体の流れ">
+          <div class="map-row">
+            <span>1</span>
+            <p>Claude基礎</p>
+          </div>
+          <div class="map-row">
+            <span>2</span>
+            <p>プロンプト設計</p>
+          </div>
+          <div class="map-row active">
+            <span>3</span>
+            <p>Claude Code CLI</p>
+          </div>
+          <div class="map-row">
+            <span>4</span>
+            <p>実務ワークフロー</p>
+          </div>
+          <div class="map-row">
+            <span>5</span>
+            <p>組織導入</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="status-strip" aria-label="教材の到達目標">
+        <div>
+          <strong>11章</strong>
+          <span>基礎から応用まで</span>
+        </div>
+        <div>
+          <strong>CLI重視</strong>
+          <span>現場開発の中核</span>
+        </div>
+        <div>
+          <strong>公式情報</strong>
+          <span>更新前提で参照</span>
+        </div>
+        <div>
+          <strong>演習付き</strong>
+          <span>手順として再現</span>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="overview" data-search="Claude 全体像 claude.ai API Code モデル コンテキスト トークン">
+        <div class="section-heading">
+          <p class="chapter">Chapter 1</p>
+          <h2>Claude全体像</h2>
+          <p>まず、Claudeを「チャットAI」ではなく、複数の利用形態を持つAIプラットフォームとして整理します。</p>
+        </div>
+
+        <div class="grid two">
+          <article class="plain-panel">
+            <h3>3つの入口</h3>
+            <ul class="dense-list">
+              <li><strong>Claude.ai</strong>: 会話、文章作成、調査、資料整理などの一般利用。</li>
+              <li><strong>Claude API</strong>: 自社アプリや業務システムへの組み込み。</li>
+              <li><strong>Claude Code</strong>: コードベースを読み、編集し、コマンドを実行する開発支援。</li>
+            </ul>
+          </article>
+          <article class="plain-panel">
+            <h3>最初に押さえる概念</h3>
+            <ul class="dense-list">
+              <li>モデルは速度、知能、コストのバランスで選ぶ。</li>
+              <li>コンテキストはClaudeが一度に参照できる作業領域。</li>
+              <li>最新のモデル名、価格、上限は変わるため公式ページで確認する。</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="callout">
+          <strong>現場での見方</strong>
+          <p>Claude Codeを導入する場合でも、Claude全般の限界、事実確認、プロンプト設計を理解しておくと、指示の精度とレビュー品質が上がります。</p>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="basics" data-search="基本操作 依頼 役割 目的 制約 出力形式 要約 比較 レビュー">
+        <div class="section-heading">
+          <p class="chapter">Chapter 2</p>
+          <h2>Claudeの基本操作</h2>
+          <p>良い依頼は、役割、目的、前提、制約、出力形式が明確です。</p>
+        </div>
+
+        <div class="template-block">
+          <div>
+            <h3>依頼テンプレート</h3>
+            <p>この型をベースにすれば、会話でもClaude Codeでもブレが減ります。</p>
+          </div>
+          <pre><code>役割: あなたは社内研修教材を作るテックリードです。
+目的: Claude CodeのCLI章を初心者にも分かる形で作成してください。
+前提: 対象はWebエンジニア。Windows利用者もいます。
+制約: 公式情報ベース。曖昧な機能名は断定しない。
+出力: 章構成、説明本文、演習、注意点の順にMarkdownで。</code></pre>
+          <button class="copy-button" data-copy>コピー</button>
+        </div>
+
+        <div class="grid three">
+          <article class="plain-panel">
+            <h3>要約</h3>
+            <p>長い仕様書、議事録、ログを目的別に短くする。</p>
+          </article>
+          <article class="plain-panel">
+            <h3>比較</h3>
+            <p>選択肢を評価軸つきで比較し、意思決定しやすくする。</p>
+          </article>
+          <article class="plain-panel">
+            <h3>レビュー</h3>
+            <p>文章、設計、コード、テスト観点の抜けを見つける。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="prompting" data-search="プロンプト prompt engineering XML タグ few shot examples チェックリスト">
+        <div class="section-heading">
+          <p class="chapter">Chapter 3</p>
+          <h2>プロンプト設計</h2>
+          <p>プロンプトは「お願い文」ではなく、作業仕様です。Claudeに渡す情報の構造が成果物の品質を左右します。</p>
+        </div>
+
+        <div class="split">
+          <div>
+            <h3>実務で効く設計</h3>
+            <ul class="check-list">
+              <li><input type="checkbox" data-progress="prompt-1"> 成功条件を先に書く</li>
+              <li><input type="checkbox" data-progress="prompt-2"> 入力データと指示を分ける</li>
+              <li><input type="checkbox" data-progress="prompt-3"> 出力形式を固定する</li>
+              <li><input type="checkbox" data-progress="prompt-4"> 例を1つ以上渡す</li>
+              <li><input type="checkbox" data-progress="prompt-5"> 不明点の扱いを決める</li>
+            </ul>
+          </div>
+          <pre><code>&lt;task&gt;
+社内向けClaude Code研修のCLI章をレビューしてください。
+&lt;/task&gt;
+
+&lt;criteria&gt;
+- 初学者が迷わない
+- Windows利用者への注意がある
+- 公式情報に依存する箇所を明示する
+&lt;/criteria&gt;
+
+&lt;output&gt;
+重大な不足、改善案、次に作るべき演習の順で出力。
+&lt;/output&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="code-intro" data-search="Claude Code 入門 Agentic coding tool ファイル編集 コマンド実行">
+        <div class="section-heading">
+          <p class="chapter">Chapter 4</p>
+          <h2>Claude Code入門</h2>
+          <p>Claude Codeは、コードベースを調査し、編集し、検証コマンドを実行する開発エージェントです。</p>
+        </div>
+
+        <div class="timeline">
+          <div>
+            <span>01</span>
+            <h3>読む</h3>
+            <p>ディレクトリ構造、関連ファイル、既存パターンを調べる。</p>
+          </div>
+          <div>
+            <span>02</span>
+            <h3>計画する</h3>
+            <p>変更範囲、リスク、検証方法を整理する。</p>
+          </div>
+          <div>
+            <span>03</span>
+            <h3>編集する</h3>
+            <p>小さく実装し、既存の設計に合わせる。</p>
+          </div>
+          <div>
+            <span>04</span>
+            <h3>検証する</h3>
+            <p>テスト、lint、ブラウザ確認、Git差分確認を行う。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card searchable highlight-section" id="cli" data-search="CLI claude command flags interactive mode slash commands PowerShell WSL worktree tools system prompt">
+        <div class="section-heading">
+          <p class="chapter">Chapter 5</p>
+          <h2>Claude Code CLI完全ガイド</h2>
+          <p>現場導入ではCLIが中核です。起動、継続、非対話実行、権限制御、トラブルシュートまでをまとめて扱います。</p>
+        </div>
+
+        <div class="quick-start">
+          <div>
+            <h3>最初に覚えるコマンド</h3>
+            <pre><code>claude
+claude "このプロジェクトの構造を説明して"
+claude -p "このエラーログを要約して"
+claude -c
+claude doctor</code></pre>
+            <button class="copy-button" data-copy>コピー</button>
+          </div>
+          <div>
+            <h3>使い分け</h3>
+            <ul class="dense-list">
+              <li><strong>対話</strong>: `claude` で長めの作業を進める。</li>
+              <li><strong>初期指示付き</strong>: `claude "..."` で目的を渡して開始。</li>
+              <li><strong>非対話</strong>: `claude -p` でログ要約や差分レビュー。</li>
+              <li><strong>継続</strong>: `claude -c` で直近セッションを再開。</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>分類</th>
+                <th>コマンド/操作</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>起動</td>
+                <td><code>claude</code></td>
+                <td>対話セッションを開始する。</td>
+              </tr>
+              <tr>
+                <td>ワンショット</td>
+                <td><code>claude -p "..."</code></td>
+                <td>スクリプトやパイプ処理で使う。</td>
+              </tr>
+              <tr>
+                <td>継続</td>
+                <td><code>claude -c</code></td>
+                <td>現在ディレクトリの直近会話を続ける。</td>
+              </tr>
+              <tr>
+                <td>再開</td>
+                <td><code>claude -r</code></td>
+                <td>過去セッションを選んで再開する。</td>
+              </tr>
+              <tr>
+                <td>診断</td>
+                <td><code>claude doctor</code></td>
+                <td>CLIや設定の問題を切り分ける。</td>
+              </tr>
+              <tr>
+                <td>対話内</td>
+                <td><code>/help</code>, <code>/clear</code>, <code>/compact</code>, <code>/doctor</code></td>
+                <td>セッション操作、文脈整理、診断を行う。</td>
+              </tr>
+              <tr>
+                <td>シェル</td>
+                <td><code>! npm test</code></td>
+                <td>対話中にコマンドを実行して結果を共有する。</td>
+              </tr>
+              <tr>
+                <td>権限</td>
+                <td><code>--tools</code>, <code>--permission-mode</code></td>
+                <td>利用できる操作や承認モードを制御する。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warning">
+          <strong>Windowsでの注意</strong>
+          <p>PowerShell、Git Bash、WSLでパス表記やショートカットが変わります。チーム教材では、社内標準のターミナルを決めた上で手順を統一してください。</p>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="workflow" data-search="実務ワークフロー 調査 実装 テスト Git PR review commit">
+        <div class="section-heading">
+          <p class="chapter">Chapter 6</p>
+          <h2>実務ワークフロー</h2>
+          <p>Claude Codeに丸投げするのではなく、調査、計画、実装、検証を短い単位で回します。</p>
+        </div>
+
+        <div class="workflow-grid">
+          <article>
+            <h3>調査</h3>
+            <p>関連ファイル、既存パターン、テスト構成を読ませる。</p>
+            <code>この不具合に関係しそうなファイルを探して、根拠つきで説明して</code>
+          </article>
+          <article>
+            <h3>実装</h3>
+            <p>変更範囲を限定し、既存設計に合わせる。</p>
+            <code>最小差分で修正して。不要なリファクタは避けて</code>
+          </article>
+          <article>
+            <h3>検証</h3>
+            <p>テスト、lint、ビルド、ブラウザ確認を行う。</p>
+            <code>変更後に実行すべき検証コマンドを選んで実行して</code>
+          </article>
+          <article>
+            <h3>公開</h3>
+            <p>Git差分を確認し、意図したファイルだけcommitする。</p>
+            <code>commit前に差分をレビューして、リスクとテスト結果をまとめて</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="context" data-search="CLAUDE.md memory settings .claude context project rules custom commands">
+        <div class="section-heading">
+          <p class="chapter">Chapter 7</p>
+          <h2>プロジェクト文脈の管理</h2>
+          <p>Claude Codeの精度は、毎回の指示だけでなく、プロジェクトに置く文脈ファイルで大きく変わります。</p>
+        </div>
+
+        <div class="template-block">
+          <div>
+            <h3>`CLAUDE.md`の最小テンプレート</h3>
+            <p>チームの開発ルール、検証コマンド、禁止事項を短く書きます。</p>
+          </div>
+          <pre><code># Project Guide
+
+## Commands
+- Test: npm test
+- Lint: npm run lint
+- Build: npm run build
+
+## Rules
+- Follow existing component patterns.
+- Do not change unrelated files.
+- Run tests before summarizing completed work.
+
+## Notes
+- This project is used for internal training materials.</code></pre>
+          <button class="copy-button" data-copy>コピー</button>
+        </div>
+
+        <div class="callout">
+          <strong>書きすぎない</strong>
+          <p>`CLAUDE.md` は巨大な仕様書ではなく、毎回守ってほしい前提の圧縮版として使います。古い情報が残ると逆に精度が落ちます。</p>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="advanced" data-search="応用 Skills Subagents Hooks MCP Plugins GitHub Actions SDK">
+        <div class="section-heading">
+          <p class="chapter">Chapter 8</p>
+          <h2>応用機能</h2>
+          <p>拡張機能は、現場課題に合わせて選びます。全部を最初から使う必要はありません。</p>
+        </div>
+
+        <div class="feature-list">
+          <article>
+            <h3>Skills</h3>
+            <p>特定作業の手順や知識を再利用可能な単位にする。</p>
+          </article>
+          <article>
+            <h3>Subagents</h3>
+            <p>レビュー、調査、テストなど役割ごとのエージェントに分ける。</p>
+          </article>
+          <article>
+            <h3>Hooks</h3>
+            <p>編集前後やツール実行時にチェックや通知を差し込む。</p>
+          </article>
+          <article>
+            <h3>MCP</h3>
+            <p>外部ツールや社内データソースをClaude Codeから扱う。</p>
+          </article>
+          <article>
+            <h3>GitHub Actions</h3>
+            <p>PRやCIの文脈でClaudeを使う。</p>
+          </article>
+          <article>
+            <h3>Agent SDK</h3>
+            <p>独自のエージェント体験や自動化を構築する。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="security" data-search="セキュリティ 権限 permission settings managed settings 機密情報 review">
+        <div class="section-heading">
+          <p class="chapter">Chapter 9</p>
+          <h2>安全な導入</h2>
+          <p>Claude Codeはファイル編集やコマンド実行ができるため、権限とレビューのルールが必須です。</p>
+        </div>
+
+        <div class="grid two">
+          <article class="plain-panel">
+            <h3>人間が見るべきもの</h3>
+            <ul class="dense-list">
+              <li>実行されるコマンド</li>
+              <li>外部送信や認証が絡む操作</li>
+              <li>削除、移動、権限変更</li>
+              <li>機密情報や顧客情報を含むファイル</li>
+            </ul>
+          </article>
+          <article class="plain-panel">
+            <h3>チームで決めるもの</h3>
+            <ul class="dense-list">
+              <li>許可するツールとMCP</li>
+              <li>commit前の確認手順</li>
+              <li>AI生成コードのレビュー基準</li>
+              <li>ログ、監査、コストの扱い</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="check-panel">
+          <h3>導入前チェック</h3>
+          <label><input type="checkbox" data-progress="sec-1"> 社内の機密情報ルールを確認した</label>
+          <label><input type="checkbox" data-progress="sec-2"> `CLAUDE.md` に禁止事項を書いた</label>
+          <label><input type="checkbox" data-progress="sec-3"> 権限モードと承認ルールを説明できる</label>
+          <label><input type="checkbox" data-progress="sec-4"> commit前レビューの担当を決めた</label>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="hands-on" data-search="ハンズオン 演習 exercise workshop 研修">
+        <div class="section-heading">
+          <p class="chapter">Chapter 10</p>
+          <h2>ハンズオン演習</h2>
+          <p>読むだけで終わらせず、現場で再現できる手順にします。</p>
+        </div>
+
+        <div class="exercise-list">
+          <article>
+            <span>01</span>
+            <h3>コードベース説明</h3>
+            <p>任意のプロジェクトで `claude` を起動し、構造と主要ファイルを説明させる。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>ログ要約</h3>
+            <p>`claude -p` にエラーログを渡し、原因候補と次の確認手順を出す。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>小さな修正</h3>
+            <p>既存の不具合を最小差分で修正し、テストを実行する。</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>`CLAUDE.md`作成</h3>
+            <p>プロジェクト固有のルール、検証コマンド、禁止事項を書く。</p>
+          </article>
+          <article>
+            <span>05</span>
+            <h3>PRレビュー</h3>
+            <p>差分をClaude Codeにレビューさせ、重大度順にリスクを整理する。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card searchable" id="appendix" data-search="付録 links official docs command prompt template">
+        <div class="section-heading">
+          <p class="chapter">Chapter 11</p>
+          <h2>付録</h2>
+          <p>更新が速い領域は、教材内で断定しすぎず公式リンクへ誘導します。</p>
+        </div>
+
+        <div class="links-grid">
+          <a href="https://docs.anthropic.com/en/docs/intro-to-claude" target="_blank" rel="noopener">Claude概要</a>
+          <a href="https://docs.anthropic.com/en/docs/about-claude/models" target="_blank" rel="noopener">モデル概要</a>
+          <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">プロンプト設計</a>
+          <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code概要</a>
+          <a href="https://docs.anthropic.com/en/docs/claude-code/quickstart" target="_blank" rel="noopener">Quickstart</a>
+          <a href="https://docs.anthropic.com/en/docs/claude-code/cli-reference" target="_blank" rel="noopener">CLI reference</a>
+          <a href="https://docs.anthropic.com/en/docs/claude-code/settings" target="_blank" rel="noopener">Settings</a>
+          <a href="https://docs.anthropic.com/en/docs/claude-code/security" target="_blank" rel="noopener">Security</a>
+          <a href="https://docs.anthropic.com/en/docs/claude-code/mcp" target="_blank" rel="noopener">MCP</a>
+          <a href="https://docs.anthropic.com/en/docs/claude-code/hooks" target="_blank" rel="noopener">Hooks</a>
+        </div>
+      </section>
+
+      <section class="section-card no-results" id="noResults" hidden>
+        <h2>検索結果がありません</h2>
+        <p>別のキーワードで探してください。例: CLI、Git、権限、Hooks、MCP。</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
